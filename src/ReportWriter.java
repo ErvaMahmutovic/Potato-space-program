@@ -57,4 +57,35 @@ public class ReportWriter {
         }
         fw.close();
     }
+
+    public static void report3(ArrayList<LaunchAttempt> attempts) throws IOException {
+        Map<String, Map<String, ArrayList<LaunchAttempt>>> attemptsByPair = new TreeMap<>();
+
+        for (LaunchAttempt a : attempts) {
+            String potatoId = a.getPotato().getId();
+            String launcherId = a.getLauncher().getId();
+
+            if (!attemptsByPair.containsKey(potatoId)) {
+                attemptsByPair.put(potatoId, new TreeMap<>());
+            }
+            if (!attemptsByPair.get(potatoId).containsKey(launcherId)) {
+                attemptsByPair.get(potatoId).put(launcherId, new ArrayList<>());
+            }
+            attemptsByPair.get(potatoId).get(launcherId).add(a);
+        }
+
+        FileWriter fw = new FileWriter("output/03_launch_results_by_pair.csv");
+        fw.write("potatoId,launcherId,attemptCount,totalPoints\n");
+        for (Map.Entry<String, Map<String, ArrayList<LaunchAttempt>>> potatoEntry : attemptsByPair.entrySet()) {
+            for (Map.Entry<String, ArrayList<LaunchAttempt>> launcherEntry : potatoEntry.getValue().entrySet()) {
+                Integer totalPoints = 0;
+                for (LaunchAttempt a : launcherEntry.getValue()) {
+                    totalPoints += a.getPoints();
+                }
+                fw.write(potatoEntry.getKey() + "," + launcherEntry.getKey() + "," +
+                        launcherEntry.getValue().size() + "," + totalPoints + "\n");
+            }
+        }
+        fw.close();
+    }
 }

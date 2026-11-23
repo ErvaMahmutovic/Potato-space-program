@@ -17,5 +17,8 @@ public class Main {
 
         ReportWriter.report2(launchers, attempts);
         System.out.println("Report2 - DONE");
+
+        ReportWriter.report3(attempts);
+        System.out.println("Report3 - DONE");
     }
 }
