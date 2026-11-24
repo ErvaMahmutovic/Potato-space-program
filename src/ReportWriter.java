@@ -1,6 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -85,6 +86,36 @@ public class ReportWriter {
                 fw.write(potatoEntry.getKey() + "," + launcherEntry.getKey() + "," +
                         launcherEntry.getValue().size() + "," + totalPoints + "\n");
             }
+        }
+        fw.close();
+    }
+    public static void report4(ArrayList<LaunchAttempt> attempts) throws IOException {
+        ArrayList<LaunchAttempt> violations = new ArrayList<>();
+        for (LaunchAttempt a : attempts) {
+            if (a.isOverLimit()) {
+                violations.add(a);
+            }
+        }
+        Collections.sort(violations, new ViolationComparator());
+
+        FileWriter fw = new FileWriter("output/04_payload_violations.csv");
+        fw.write("attemptId,potatoId,launcherId,payloadKg,maxPayloadKg,excessKg\n");
+        for (LaunchAttempt a : violations) {
+            fw.write(a.getId() + "," + a.getPotato().getId() + "," + a.getLauncher().getId() + "," +
+                    a.getPayloadKg() + "," + a.getLauncher().getMaxPayloadKg() + "," + a.getExcessKg() + "\n");
+        }
+        fw.close();
+    }
+
+    public static void report5(ArrayList<LaunchAttempt> attempts) throws IOException {
+        ArrayList<LaunchAttempt> sorted = new ArrayList<>(attempts);
+        Collections.sort(sorted);
+
+        FileWriter fw = new FileWriter("output/05_best_test_flights.csv");
+        fw.write("attemptId,potatoName,launcherName,flightRating,payloadKg,points\n");
+        for (LaunchAttempt a : sorted.size() > 3 ? sorted.subList(0, 3) : sorted) {
+            fw.write(a.getId() + "," + a.getPotato().getName() + "," + a.getLauncher().getName() + "," +
+                    a.getFlightRating() + "," + a.getPayloadKg() + "," + a.getPoints() + "\n");
         }
         fw.close();
     }
