@@ -20,5 +20,11 @@ public class Main {
 
         ReportWriter.report3(attempts);
         System.out.println("Report3 - DONE");
+
+        ReportWriter.report4(attempts);
+        System.out.println("Report4 - DONE");
+
+        ReportWriter.report5(attempts);
+        System.out.println("Report5 - DONE");
     }
 }
